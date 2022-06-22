@@ -28,13 +28,15 @@ def parser(raw_text):
     )
     matched = re.match(match_pattern, raw_text)
     if matched is None:
-        return {}
+        return None
     return matched.groupdict()
 
 
 def main():
     filename = "find-istio-proxy-anomaly.csv"
     print("open file=", filename)
+
+    log_table = {}
     with open(filename) as csvfile:
         spamreader = csv.reader(csvfile, skipinitialspace=True)
         next(spamreader)  # skip header
@@ -45,7 +47,14 @@ def main():
                 print(e)
                 continue
             parsed_line = parser(log_body)
-            print(parsed_line)
+            if parsed_line is None:
+                continue
+            # print(parsed_line)
+            _key = parsed_line['Method'] + " " + parsed_line['Path']
+            log_table[_key] = log_table.get(_key, 0) + 1
+
+    import json
+    print(json.dumps(log_table, sort_keys=True, indent=4))
 
 
 if __name__ == "__main__":
