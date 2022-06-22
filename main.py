@@ -5,7 +5,7 @@ import csv
 def parser(raw_text):
     match_pattern = (
         # '[2022-05-12T00:57:09.548Z]'
-        r'\[(?P<DateTime>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z)]'
+        r'\[(?P<DateTime>\d{4}-\d{2}-\d{2})T\d{2}:\d{2}:\d{2}.\d{3}Z]'
         r' "(?P<Method>\w+)'  # 'GET'
         r' (?P<Path>[^ ]+)'  # '/author'
         r' (?P<Protocol>[^ ]+)"'  # 'HTTP/1.1'
@@ -50,10 +50,18 @@ def main():
             if parsed_line is None:
                 continue
             # print(parsed_line)
-            _key = parsed_line['Method'] + " " + parsed_line['Path']
+            _key = (
+                parsed_line['Method'],
+                parsed_line['Path'],
+                parsed_line['Status'],
+                parsed_line['ReqAuthority'],
+                parsed_line['DateTime']
+            )
             log_table[_key] = log_table.get(_key, 0) + 1
 
     import json
+    log_table = sorted(log_table.items(), key=lambda x: x[1], reverse=True)
+    # log_table = filter(lambda x: x, )
     print(json.dumps(log_table, sort_keys=True, indent=4))
 
 
