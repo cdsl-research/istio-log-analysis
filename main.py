@@ -37,6 +37,7 @@ def main():
     print("open file=", filename)
 
     log_table = {}
+    log_example = {}
     with open(filename) as csvfile:
         spamreader = csv.reader(csvfile, skipinitialspace=True)
         next(spamreader)  # skip header
@@ -55,14 +56,26 @@ def main():
                 parsed_line['Path'],
                 parsed_line['Status'],
                 parsed_line['ReqAuthority'],
-                parsed_line['DateTime']
+                # parsed_line['DateTime']
             )
             log_table[_key] = log_table.get(_key, 0) + 1
+            log_example[_key] = log_body
 
-    import json
     log_table = sorted(log_table.items(), key=lambda x: x[1], reverse=True)
-    # log_table = filter(lambda x: x, )
-    print(json.dumps(log_table, sort_keys=True, indent=4))
+    log_table = list(filter(lambda x: x[1] > 1000, log_table))
+    for l in log_table:
+        _key = l[0]
+        _val = l[1]
+        _log = log_example[_key]
+        print(_key)
+        print(_val)
+        print(_log)
+
+    # log_table = list(
+    #     filter(lambda x: x[0][3] == "fulltext-elastic.fulltext:9200" and x[0][1] == "/fulltext/_search", log_table))
+
+    # import json
+    # print(json.dumps(log_table, sort_keys=True, indent=4))
 
 
 if __name__ == "__main__":
