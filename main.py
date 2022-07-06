@@ -33,7 +33,8 @@ def parser(raw_text):
 
 
 def main():
-    filename = "find-istio-proxy-anomaly.csv"
+    # filename = "find-istio-proxy-anomaly.csv"
+    filename = "find-istio-proxy-normal.csv"
     print("open file=", filename)
 
     log_table = {}
@@ -50,7 +51,13 @@ def main():
             parsed_line = parser(log_body)
             if parsed_line is None:
                 continue
-            # print(parsed_line)
+
+            # exclude inbound log
+            if parsed_line["UpstreamCluster"].startswith("inbound"):
+                continue
+
+            # import json
+            # print(json.dumps(parsed_line))
             _key = (
                 parsed_line["Method"],
                 parsed_line["Path"],
@@ -62,17 +69,16 @@ def main():
             log_example[_key] = log_body
 
     log_table = sorted(log_table.items(), key=lambda x: x[1], reverse=True)
-    log_table = list(filter(lambda x: x[1] > 1000, log_table))
+    # log_table = list(filter(lambda x: x[1] > 1000, log_table))
     for l in log_table:
         _key = l[0]
         _val = l[1]
         _log = log_example[_key]
-        print(_key)
-        print(_val)
-        print(_log)
+        print(_val, "\t", _key)
+        # print(_log)
 
-    # log_table = list(
-    #     filter(lambda x: x[0][3] == "fulltext-elastic.fulltext:9200" and x[0][1] == "/fulltext/_search", log_table))
+# log_table = list(
+#     filter(lambda x: x[0][3] == "fulltext-elastic.fulltext:9200" and x[0][1] == "/fulltext/_search", log_table))
 
     # import json
     # print(json.dumps(log_table, sort_keys=True, indent=4))
