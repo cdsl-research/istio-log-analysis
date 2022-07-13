@@ -1,5 +1,6 @@
 import csv
 import re
+import os
 
 
 def parser(raw_text):
@@ -25,9 +26,9 @@ def parser(raw_text):
         # 'outbound_.8000_._.httpbin.foo.svc.cluster.local'
         r" (?P<ReqServerName>[^ ]+)"
         r" (?P<RouteName>[^ ]+)"  # 'default'
-        r' "(?P<EndpointMethod>\w+)'
-        r' (?P<EndpointPath>[^ ]+)"'
-        r" (?P<ServiceTracing>([_\w\d\-]+\(\d+\)\|)+)"
+        # r' "(?P<EndpointMethod>\w+)'
+        # r' (?P<EndpointPath>[^ ]+)"'
+        # r" (?P<ServiceTracing>([_\w\d\-]+\(\d+\)\|)+)"
     )
     matched = re.match(match_pattern, raw_text)
     if matched is None:
@@ -37,7 +38,8 @@ def parser(raw_text):
 
 def main():
     # filename = "find-istio-proxy-anomaly.csv"
-    filename = "find-istio-proxy-normal.csv"
+    # filename = "find-istio-proxy-normal.csv"
+    filename = os.getenv("FILE", "v1-logs/find-istio-proxy-anomaly.csv")
     print("open file=", filename)
 
     log_table = {}
@@ -59,10 +61,10 @@ def main():
             if parsed_line["UpstreamCluster"].startswith("inbound"):
                 continue
 
-            import json
-            print(log_body)
-            print(json.dumps(parsed_line, indent=2))
-            return
+            # import json
+            # print(log_body)
+            # print(json.dumps(parsed_line, indent=2))
+            # return
 
             _key = (
                 parsed_line["Method"],
