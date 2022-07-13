@@ -60,6 +60,10 @@ def main():
             # exclude inbound log
             if parsed_line["UpstreamCluster"].startswith("inbound"):
                 continue
+            elif parsed_line["Path"].startswith("/.kibana") or \
+                    parsed_line["Path"].startswith("/_") or \
+                    parsed_line["Path"].startswith("/."):
+                continue
 
             # import json
             # print(log_body)
@@ -68,8 +72,8 @@ def main():
 
             _key = (
                 parsed_line["Method"],
-                parsed_line["Path"],
                 parsed_line["Status"],
+                parsed_line["Path"],
                 parsed_line["ReqAuthority"],
                 # parsed_line['DateTime']
             )
@@ -82,7 +86,7 @@ def main():
         _key = l[0]
         _val = l[1]
         _log = log_example[_key]
-        print(_val, "\t", _key)
+        print(_val, "\t", "\t".join(_key))
         # print(_log)
 
 # log_table = list(
