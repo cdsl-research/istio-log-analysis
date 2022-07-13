@@ -4,7 +4,7 @@ import os
 from datetime import datetime as dt
 
 
-def round_datetime(datetime_text: str):
+def round_datetime(datetime_text: str) -> str:
     my_dt = dt.strptime(datetime_text, "%Y-%m-%dT%H:%M:%S.%fZ")
     my_dt_round = my_dt.replace(minute=my_dt.minute - (my_dt.minute % 30),
                                 second=0, microsecond=0)
