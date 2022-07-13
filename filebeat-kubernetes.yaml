@@ -12,6 +12,7 @@ data:
     - type: container
       paths:
         - /var/log/containers/*istio*.log
+      exclude_lines: ['elastic-transport-js']
 
     processors:
       - add_cloud_metadata:
