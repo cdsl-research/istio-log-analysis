@@ -13,8 +13,6 @@ def round_datetime(datetime_text: str) -> str:
 
 
 def main():
-    # filename = "find-istio-proxy-anomaly.csv"
-    # filename = "find-istio-proxy-normal.csv"
     filename = os.getenv("FILE", "v1-logs/find-istio-proxy-anomaly.csv")
     print("open file=", filename)
 
@@ -66,11 +64,9 @@ def main():
         _val = l[1]
         _log = log_example[_key]
         print(_val, "\t", "\t".join(_key))
-        # print(_log)
 
-# log_table = list(
-#     filter(lambda x: x[0][3] == "fulltext-elastic.fulltext:9200" and x[0][1] == "/fulltext/_search", log_table))
-
+    # log_table = list(
+    #     filter(lambda x: x[0][3] == "fulltext-elastic.fulltext:9200" and x[0][1] == "/fulltext/_search", log_table))
     # import json
     # print(json.dumps(log_table, sort_keys=True, indent=4))
 
