@@ -1,9 +1,17 @@
 import csv
 import re
 import os
+from datetime import datetime as dt
 
 
-def parser(raw_text):
+def round_datetime(datetime_text: str):
+    my_dt = dt.strptime(datetime_text, "%Y-%m-%dT%H:%M:%S.%fZ")
+    my_dt_round = my_dt.replace(minute=my_dt.minute - (my_dt.minute % 30),
+                                second=0, microsecond=0)
+    return my_dt_round.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+
+def parser(raw_text: str):
     match_pattern = (
         # '[2022-05-12T00:57:09.548Z]'
         r"\[(?P<DateTime>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z)]"
@@ -65,20 +73,23 @@ def main():
                     parsed_line["Path"].startswith("/."):
                 continue
 
-            # import json
-            # print(log_body)
-            # print(json.dumps(parsed_line, indent=2))
-            # return
+            # round datetime
+            parsed_line["DateTime"] = round_datetime(parsed_line["DateTime"])
 
             _key = (
+                parsed_line['DateTime'],
                 parsed_line["Method"],
                 parsed_line["Status"],
                 parsed_line["Path"],
                 parsed_line["ReqAuthority"],
-                # parsed_line['DateTime']
             )
             log_table[_key] = log_table.get(_key, 0) + 1
             log_example[_key] = log_body
+
+            # import json
+            # print(log_body)
+            # print(json.dumps(parsed_line, indent=2))
+            # return
 
     log_table = sorted(log_table.items(), key=lambda x: x[1], reverse=True)
     # log_table = list(filter(lambda x: x[1] > 1000, log_table))
