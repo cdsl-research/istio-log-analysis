@@ -5,7 +5,7 @@ import re
 def parser(raw_text):
     match_pattern = (
         # '[2022-05-12T00:57:09.548Z]'
-        r"\[(?P<DateTime>\d{4}-\d{2}-\d{2})T\d{2}:\d{2}:\d{2}.\d{3}Z]"
+        r"\[(?P<DateTime>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z)]"
         r' "(?P<Method>\w+)'  # 'GET'
         r" (?P<Path>[^ ]+)"  # '/author'
         r' (?P<Protocol>[^ ]+)"'  # 'HTTP/1.1'
@@ -25,6 +25,9 @@ def parser(raw_text):
         # 'outbound_.8000_._.httpbin.foo.svc.cluster.local'
         r" (?P<ReqServerName>[^ ]+)"
         r" (?P<RouteName>[^ ]+)"  # 'default'
+        r' "(?P<EndpointMethod>\w+)'
+        r' (?P<EndpointPath>[^ ]+)"'
+        r" (?P<ServiceTracing>([_\w\d\-]+\(\d+\)\|)+)"
     )
     matched = re.match(match_pattern, raw_text)
     if matched is None:
@@ -56,8 +59,11 @@ def main():
             if parsed_line["UpstreamCluster"].startswith("inbound"):
                 continue
 
-            # import json
-            # print(json.dumps(parsed_line))
+            import json
+            print(log_body)
+            print(json.dumps(parsed_line, indent=2))
+            return
+
             _key = (
                 parsed_line["Method"],
                 parsed_line["Path"],
