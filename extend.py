@@ -3,6 +3,8 @@ import csv
 
 from parser import parser
 
+from yaml import parse
+
 
 reqid_table = {}
 
@@ -22,11 +24,16 @@ def main():
             parsed_line = parser(log_body)
             if parsed_line is None:
                 continue
-            elif parsed_line["UpstreamCluster"].startswith("inbound"):
-                continue
+            # elif parsed_line["UpstreamCluster"].startswith("outbound"):
+            #     continue
 
             reqid = parsed_line["ReqId"]
             reqid_lst = reqid_table.get(reqid, [])
+            reqid_lst.append(parsed_line)
+            reqid_table[reqid] = reqid_lst
+
+            import json
+            print(json.dumps(reqid_table, indent=4))
 
 
 if __name__ == "__main__":
