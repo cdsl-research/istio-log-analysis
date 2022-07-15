@@ -25,10 +25,16 @@ def main():
             parsed_line = parser(log_body)
             if parsed_line is None:
                 continue
+            # Elasticsearchは除外
             elif parsed_line["Path"].startswith("/fulltext/_search"):
                 continue
+            # Minioは除外
             elif "minio-py" in parsed_line["UserAgent"]:
                 continue
+
+            # OutboundにServiceTracingを付与
+            elif parsed_line["UpstreamCluster"].startswith("outbound"):
+                pass
 
             reqid = parsed_line["ReqId"]
             reqid_lst = reqid_table.get(reqid, [])
@@ -48,14 +54,15 @@ def main():
                 line["EndpointMethod"] = endpoint_method
                 line["EndpointPath"] = endpoint_path
             # print(json.dumps(lines, indent=4))
-            continue
 
-        if len(lines) == 10:
+        elif len(lines) == 10:
             for line in lines:
                 line["EndpointMethod"] = "GET"
                 line["EndpointPath"] = "/"
             # print(json.dumps(lines, indent=4))
-            continue
+
+        else:
+            print(lines)
 
         # print(len(lines))
         # print(json.dumps(lines, indent=4))
