@@ -1,5 +1,7 @@
 import os
 import csv
+import json
+
 
 from parser import parser
 
@@ -23,21 +25,44 @@ def main():
             parsed_line = parser(log_body)
             if parsed_line is None:
                 continue
-            elif parsed_line["UpstreamCluster"].startswith("inbound"):
-                continue
             elif parsed_line["Path"].startswith("/fulltext/_search"):
                 continue
-
-            # parsed_line["EndpointMethod"] = "GET"
-            # parsed_line["EndpointPath"] = "/"
+            elif "minio-py" in parsed_line["UserAgent"]:
+                continue
 
             reqid = parsed_line["ReqId"]
             reqid_lst = reqid_table.get(reqid, [])
             reqid_lst.append(parsed_line)
             reqid_table[reqid] = reqid_lst
 
-    import json
-    print(json.dumps(reqid_table, indent=4))
+    for reqid, lines in reqid_table.items():
+        # ReqAuthorityに外部からのアクセスが含まれている場合
+        candidates = ("34.84.68.226", "doktor.tak-cslab.org")
+        match = list(filter(lambda x: x["ReqAuthority"] in candidates, lines))
+        if match:
+            endpoint_method = match[0]["Method"]
+            endpoint_path = match[0]["Path"]
+            # print(endpoint_method, endpoint_path)
+
+            for line in lines:
+                line["EndpointMethod"] = endpoint_method
+                line["EndpointPath"] = endpoint_path
+            # print(json.dumps(lines, indent=4))
+            continue
+
+        if len(lines) == 10:
+            for line in lines:
+                line["EndpointMethod"] = "GET"
+                line["EndpointPath"] = "/"
+            # print(json.dumps(lines, indent=4))
+            continue
+
+        # print(len(lines))
+        # print(json.dumps(lines, indent=4))
+
+    new_filename = filename.replace(".csv", "-ext.json")
+    with open(new_filename, mode='w') as f:
+        json.dump(reqid_table, f, indent=4)
 
 
 if __name__ == "__main__":
