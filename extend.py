@@ -68,7 +68,7 @@ def main():
             # print(json.dumps(lines, indent=4))
 
         # 外部からのアクセスが抜けている場合
-        elif len(lines) == 10:
+        else:
             for line in lines:
                 line["EndpointMethod"] = "GET"
                 line["EndpointPath"] = "/"
@@ -81,8 +81,8 @@ def main():
 
             # print(json.dumps(lines, indent=4))
 
-        else:
-            print(lines)
+        # else:
+        #     print(json.dumps(lines, indent=4))
 
         # OutboundにServiceTracingを付与
         if parsed_line["UpstreamCluster"].startswith("outbound"):
