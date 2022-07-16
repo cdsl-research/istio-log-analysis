@@ -32,10 +32,6 @@ def main():
             elif "minio-py" in parsed_line["UserAgent"]:
                 continue
 
-            # OutboundにServiceTracingを付与
-            elif parsed_line["UpstreamCluster"].startswith("outbound"):
-                pass
-
             reqid = parsed_line["ReqId"]
             reqid_lst = reqid_table.get(reqid, [])
             reqid_lst.append(parsed_line)
@@ -46,23 +42,43 @@ def main():
         candidates = ("34.84.68.226", "doktor.tak-cslab.org")
         match = list(filter(lambda x: x["ReqAuthority"] in candidates, lines))
         if match:
+            # EndpointMethodとEndpointPathを取得
             endpoint_method = match[0]["Method"]
             endpoint_path = match[0]["Path"]
             # print(endpoint_method, endpoint_path)
 
+            # ServiceTracingで使うサービス名とステータスコードの取得
+            endpoint_status = match[0]["Status"]
+            _up_cluster = match[0]["UpstreamCluster"].split("|")
+            _host = _up_cluster[-1].replace(".svc.cluster.local", "")
+            _port = _up_cluster[1]
+            endpoint_svcname = _host + ":" + _port
+
             for line in lines:
                 line["EndpointMethod"] = endpoint_method
                 line["EndpointPath"] = endpoint_path
+                line["ServiceTracing"] = endpoint_svcname + \
+                    f"({endpoint_status})|"
+
+                _reqauth = line["ReqAuthority"]
+                if not _reqauth in candidates:
+                    _status = line["Status"]
+                    line["ServiceTracing"] += f"{_reqauth}({_status})|"
             # print(json.dumps(lines, indent=4))
 
         elif len(lines) == 10:
             for line in lines:
                 line["EndpointMethod"] = "GET"
                 line["EndpointPath"] = "/"
+                line["ServiceTracing"] = ""
             # print(json.dumps(lines, indent=4))
 
         else:
             print(lines)
+
+        # OutboundにServiceTracingを付与
+        if parsed_line["UpstreamCluster"].startswith("outbound"):
+            parsed_line["ServiceTracing"] = f"{_service_name}({_status})|"
 
         # print(len(lines))
         # print(json.dumps(lines, indent=4))
