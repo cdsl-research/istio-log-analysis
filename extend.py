@@ -38,6 +38,7 @@ def main():
             reqid_table[reqid] = reqid_lst
 
     for reqid, lines in reqid_table.items():
+
         # ReqAuthorityに外部からのアクセスが含まれている場合
         candidates = ("34.84.68.226", "doktor.tak-cslab.org")
         match = list(filter(lambda x: x["ReqAuthority"] in candidates, lines))
@@ -66,11 +67,18 @@ def main():
                     line["ServiceTracing"] += f"{_reqauth}({_status})|"
             # print(json.dumps(lines, indent=4))
 
+        # 外部からのアクセスが抜けている場合
         elif len(lines) == 10:
             for line in lines:
                 line["EndpointMethod"] = "GET"
                 line["EndpointPath"] = "/"
-                line["ServiceTracing"] = ""
+
+                line["ServiceTracing"] = "front-app.front:4000(000)|"
+                _reqauth = line["ReqAuthority"]
+                if not _reqauth in candidates:
+                    _status = line["Status"]
+                    line["ServiceTracing"] += f"{_reqauth}({_status})|"
+
             # print(json.dumps(lines, indent=4))
 
         else:
