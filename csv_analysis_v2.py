@@ -25,7 +25,7 @@ def main():
             # round datetime
             row["DateTime"] = round_datetime(row["DateTime"])
 
-            _key = (
+            _key: tuple = (
                 row["DateTime"],
                 row["EndpointMethod"],
                 row["EndpointPath"],
