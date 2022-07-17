@@ -1,11 +1,8 @@
 import os
 import csv
-import json
 
 
 from parser import parser
-
-from yaml import parse
 
 
 def main():
@@ -91,9 +88,17 @@ def main():
         # print(len(lines))
         # print(json.dumps(lines, indent=4))
 
-    new_filename = filename.replace(".csv", "-ext.json")
-    with open(new_filename, mode='w') as f:
-        json.dump(reqid_table, f, indent=4)
+    write_buffer = []
+    for reqid in list(reqid_table.keys()):
+        write_buffer += reqid_table[reqid]
+        del reqid_table[reqid]
+
+    new_filename = filename.replace(".csv", "-ext.csv")
+    with open(new_filename, mode='w') as csvfile:
+        fieldnames = list(write_buffer[0].keys())
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(write_buffer)
 
 
 if __name__ == "__main__":
