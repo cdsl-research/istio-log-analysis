@@ -31,9 +31,9 @@ def main():
 
             _key: tuple = (
                 row["DateTime"],
-                row["EndpointMethod"],
-                row["EndpointPath"],
-                row["ServiceTracing"],
+                # row["EndpointMethod"],
+                # row["EndpointPath"],
+                # row["ServiceTracing"],
             )
             log_table[_key] = log_table.get(_key, 0) + 1
             log_example[_key] = json.dumps(row)
@@ -44,11 +44,16 @@ def main():
     # 1000件以上のログに絞り込み
     # log_table = list(filter(lambda x: x[1] > 1000, log_table))
 
-    for l in log_table:
-        _key = l[0]
-        _val = l[1]
-        _log = log_example[_key]
-        print(_val, "\t", "\t".join(_key))
+    # 結果の書き出し
+    current = dt.now()
+    timestamp = current.strftime("%Y%m%d-%H%M%S")
+    with open(f"result/{timestamp}_{_minute}.log", mode='w') as logfile:
+        for l in log_table:
+            _key = str(l[0])
+            _val = str(l[1])
+            # _log = log_example[_key]
+            logline = _val + "\t" + " ".join(_key)
+            logfile.write(logline)
 
     # Debug出力
     # print(json.dumps(log_table, sort_keys=True, indent=4))
