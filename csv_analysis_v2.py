@@ -20,6 +20,8 @@ def main():
     filename = os.getenv("FILE", "v2-logs/30min-ext.csv")
     print("open file=", filename)
 
+    base_filename = filename.split("/")[-1]
+
     _spec_attrs = os.getenv(
         "ATTRS", "DateTime,EndpointMethod,EndpointPath,ServiceTracing")
     spec_attrs = _spec_attrs.split(",")
@@ -47,7 +49,7 @@ def main():
     # 結果の書き出し
     current = dt.now()
     timestamp = current.strftime("%Y%m%d-%H%M%S")
-    with open(f"result/{timestamp}_{_minute}_{_spec_attrs}.log", mode='w') as logfile:
+    with open(f"result/{timestamp}_{base_filename}_{_minute}_{_spec_attrs}.log", mode='w') as logfile:
         for l in log_table:
             _key = " ".join(l[0])
             _val = str(l[1])
