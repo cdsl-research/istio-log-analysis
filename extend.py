@@ -64,13 +64,13 @@ def main():
                     line["ServiceTracing"] += f"{_reqauth}({_status})|"
             # print(json.dumps(lines, indent=4))
 
-        # 外部からのアクセスが抜けている場合
+        # 外部からのアクセスが抜けている場合(Liveness Proveによるもの)
         else:
             for line in lines:
                 line["EndpointMethod"] = "GET"
                 line["EndpointPath"] = "/"
 
-                line["ServiceTracing"] = "front-app.front:4000(000)|"
+                line["ServiceTracing"] = "front-app.front:4000(200)|"
                 _reqauth = line["ReqAuthority"]
                 if not _reqauth in candidates:
                     _status = line["Status"]
