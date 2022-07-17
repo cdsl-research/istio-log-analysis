@@ -26,11 +26,10 @@ def main():
             row["DateTime"] = round_datetime(row["DateTime"])
 
             _key = (
-                row['DateTime'],
-                row["Method"],
-                row["Status"],
-                row["Path"],
-                row["ReqAuthority"],
+                row["DateTime"],
+                row["EndpointMethod"],
+                row["EndpointPath"],
+                row["ServiceTracing"],
             )
             log_table[_key] = log_table.get(_key, 0) + 1
             log_example[_key] = json.dumps(row)
