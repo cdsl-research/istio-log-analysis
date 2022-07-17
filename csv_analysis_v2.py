@@ -6,14 +6,16 @@ from datetime import datetime as dt
 from typing import Dict
 
 
-def round_datetime(datetime_text: str) -> str:
+def round_datetime(datetime_text: str, minute: int = 30) -> str:
     my_dt = dt.strptime(datetime_text, "%Y-%m-%dT%H:%M:%S.%fZ")
-    my_dt_round = my_dt.replace(minute=my_dt.minute - (my_dt.minute % 30),
+    my_dt_round = my_dt.replace(minute=my_dt.minute - (my_dt.minute % minute),
                                 second=0, microsecond=0)
     return my_dt_round.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def main():
+    _minute = int(os.getenv("MINUTE", 30))
+
     filename = os.getenv("FILE", "v2-logs/30min-ext.csv")
     print("open file=", filename)
 
@@ -23,7 +25,8 @@ def main():
         csvreader = csv.DictReader(csvfile)
         for row in csvreader:
             # round datetime
-            row["DateTime"] = round_datetime(row["DateTime"])
+            row["DateTime"] = round_datetime(
+                datetime_text=row["DateTime"], minute=_minute)
 
             _key: tuple = (
                 row["DateTime"],
