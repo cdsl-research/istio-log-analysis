@@ -85,8 +85,8 @@ def main():
         #     print(json.dumps(lines, indent=4))
 
         # OutboundにServiceTracingを付与
-        if parsed_line["UpstreamCluster"].startswith("outbound"):
-            parsed_line["ServiceTracing"] = f"{_service_name}({_status})|"
+        # if parsed_line["UpstreamCluster"].startswith("outbound"):
+        #     parsed_line["ServiceTracing"] = f"{_service_name}({_status})|"
 
         # print(len(lines))
         # print(json.dumps(lines, indent=4))
