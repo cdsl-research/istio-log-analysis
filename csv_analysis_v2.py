@@ -15,6 +15,7 @@ def round_datetime(datetime_text: str, minute: int = 30) -> str:
 
 def main():
     _minute = int(os.getenv("MINUTE", 30))
+    print("round minute=", _minute)
 
     filename = os.getenv("FILE", "v2-logs/30min-ext.csv")
     print("open file=", filename)
