@@ -20,6 +20,10 @@ def main():
     filename = os.getenv("FILE", "v2-logs/30min-ext.csv")
     print("open file=", filename)
 
+    _spec_attrs = os.getenv(
+        "ATTRS", "DateTime,EndpointMethod,EndpointPath,ServiceTracing")
+    spec_attrs = _spec_attrs.split(",")
+
     log_table: Dict[str, int] = {}  # 特徴ごとにログ件数を集計する
     log_example: Dict[str, str] = {}  # 集計したログの代表ログを記録する
     with open(filename) as csvfile:
@@ -29,12 +33,7 @@ def main():
             row["DateTime"] = round_datetime(
                 datetime_text=row["DateTime"], minute=_minute)
 
-            _key: tuple = (
-                row["DateTime"],
-                # row["EndpointMethod"],
-                # row["EndpointPath"],
-                # row["ServiceTracing"],
-            )
+            _key: tuple = tuple(row[x] for x in spec_attrs)
             log_table[_key] = log_table.get(_key, 0) + 1
             log_example[_key] = json.dumps(row)
 
@@ -47,12 +46,12 @@ def main():
     # 結果の書き出し
     current = dt.now()
     timestamp = current.strftime("%Y%m%d-%H%M%S")
-    with open(f"result/{timestamp}_{_minute}.log", mode='w') as logfile:
+    with open(f"result/{timestamp}_{_minute}_{_spec_attrs}.log", mode='w') as logfile:
         for l in log_table:
-            _key = str(l[0])
+            _key = " ".join(l[0])
             _val = str(l[1])
             # _log = log_example[_key]
-            logline = _val + "\t" + " ".join(_key)
+            logline = _val + "\t" + _key + "\n"
             logfile.write(logline)
 
     # Debug出力
