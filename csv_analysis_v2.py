@@ -29,10 +29,11 @@ def main():
     with open(filename) as csvfile:
         csvreader = csv.DictReader(csvfile)
         for row in csvreader:
-            # round datetime
+            # 日時でのまるめ
             row["DateTime"] = round_datetime(
                 datetime_text=row["DateTime"], minute=_minute)
 
+            # 属性の取り出し
             _key: tuple = tuple(row[x] for x in spec_attrs)
             log_table[_key] = log_table.get(_key, 0) + 1
             log_example[_key] = json.dumps(row)
