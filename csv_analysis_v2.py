@@ -50,12 +50,12 @@ def main():
     current = dt.now()
     timestamp = current.strftime("%Y%m%d-%H%M%S")
     with open(f"result/{timestamp}_{base_filename}_{_minute}_{_spec_attrs}.log", mode='w') as logfile:
-        for l in log_table:
+        for i, l in enumerate(log_table):
             _key = " ".join(l[0])
             _val = str(l[1])
             # _log = log_example[_key]
-            logline = _val + "\t" + _key + "\n"
-            logfile.write(logline)
+            logline = "\t".join(("e{i}", _val, "1", _key))
+            logfile.write(logline + "\n")
 
     # Debug出力
     # print(json.dumps(log_table, sort_keys=True, indent=4))
