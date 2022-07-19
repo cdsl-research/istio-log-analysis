@@ -54,7 +54,7 @@ def main():
             _key = " ".join(l[0])
             _val = str(l[1])
             # _log = log_example[_key]
-            logline = "\t".join(("e{i}", _val, "1", _key))
+            logline = "\t".join((f"e{i:02}", _val, "1", _key))
             logfile.write(logline + "\n")
 
     # Debug出力
