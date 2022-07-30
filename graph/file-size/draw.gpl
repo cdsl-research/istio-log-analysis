@@ -1,6 +1,6 @@
 # 出力形式
 set terminal pdf
-set output '5-experiment-reduction-filesize.pdf'
+set output '5-result-reduction-filesize.pdf'
 set size ratio 0.6  # 出力サイズ
 
 # 目盛り
