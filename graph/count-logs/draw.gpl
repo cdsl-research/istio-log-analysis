@@ -1,0 +1,39 @@
+# 出力形式
+set terminal pdf
+set output '5-experiment-reduction-count.pdf'
+set size ratio 0.6  # 出力サイズ
+
+# 目盛り
+set logscale y # 対数目盛り
+set format y "10^{%L}"
+set grid ytics # 主目盛り
+set grid linewidth 1
+set grid linetype 1
+set grid linecolor 0
+set xtics font ",24" offset 0,0  # 目盛りのフォントの変更
+set ytics font ",24" offset 0,0  # 目盛りのフォントの変更
+
+# 軸ラベル
+set xlabel 'Applied Method' offset 0,-1
+set ylabel 'Number of Log Messages' offset -4,0
+set xlabel font ",26" # xlabelのフォントの変更
+set ylabel font ",26" # ylabelのフォントの変更
+set zlabel font ",26" # zlabelのフォントの変更
+set lmargin 5  # ylabelが隠れる対策
+set bmargin 5  # xlabelが隠れる対策
+
+# グラフまわり
+# set style fill solid  # 塗りつぶし
+set style fill pattern 2 border  # モノクロ
+set style data histogram
+set boxwidth 0.5 relative
+
+# 凡例
+set key outside center top horizontal reverse Left
+set key font ",18"    # 凡例のフォントの変更
+
+# set datafile separator " "
+set datafile separator "\t"  # 入力データの形式
+plot [:] [1:] \
+	"result.dat" using 0:($2+$3) with boxes title "Raw Logs" lt -1, \
+	"result.dat" using 0:($3):xtic(1) with boxes title "Summary Logs" lt -1 
