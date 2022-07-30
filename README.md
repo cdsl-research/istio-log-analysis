@@ -19,3 +19,9 @@ python main.py
 
 - v1-logs/ の中身はリクエストIDが1トランザクションに対応していない．つまり，1トランザクションに複数個のIDが付与されている．
 - v2-logs/ の中身はリクエストIDが1トランザクションに対応している．つまり，1トランザクションに1個のIDが付与されている．
+
+## メモ
+
+計測対象のデータ
+
+20220719-082129_1day-ext.csv_30_DateTime,EndpointMethod,EndpointPath,ServiceTracing.log
