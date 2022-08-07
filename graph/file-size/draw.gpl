@@ -24,7 +24,7 @@ set bmargin 5  # xlabelが隠れる対策
 
 # グラフまわり
 # set style fill solid  # 塗りつぶし
-set style fill pattern 2 border  # モノクロ
+set style fill pattern 3 border  # モノクロ
 set style data histogram
 set boxwidth 0.5 relative
 
@@ -32,8 +32,16 @@ set boxwidth 0.5 relative
 set key outside center top horizontal reverse Left
 set key font ",18"    # 凡例のフォントの変更
 
+# 矢印
+set style arrow 999 size character 2,20 filled linewidth 2
+set arrow 1 from 1.4,18004245 to 1.25,6204245 arrowstyle 999
+
+# テキスト
+set label font ",18" # labelのフォントの変更
+set label 1 at 1.4,18004245 "Summary\nLogs"
+
 # set datafile separator " "
 set datafile separator "\t"  # 入力データの形式
 plot [:] [1:] \
-	"result.dat" using 0:($2+$3) with boxes title "Raw Logs" lt -1, \
-	"result.dat" using 0:($3):xtic(1) with boxes title "Summary Logs" lt -1 
+	"result.dat" using 0:($2+$3) with boxes title "Summary Logs" lt -1, \
+	"result.dat" using 0:($3):xtic(1) with boxes title "Raw Logs" lt -1 
