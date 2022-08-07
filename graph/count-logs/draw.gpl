@@ -14,8 +14,8 @@ set xtics font ",24" offset 0,0  # 目盛りのフォントの変更
 set ytics font ",24" offset 0,0  # 目盛りのフォントの変更
 
 # 軸ラベル
-set xlabel 'Applied Method' offset 0,-1
-set ylabel 'Number of Log Messages' offset -4,0
+# set xlabel 'Applied Method' offset 0,-1
+set ylabel 'Number of Log Messages' offset -4,-1
 set xlabel font ",26" # xlabelのフォントの変更
 set ylabel font ",26" # ylabelのフォントの変更
 set zlabel font ",26" # zlabelのフォントの変更
@@ -24,7 +24,7 @@ set bmargin 5  # xlabelが隠れる対策
 
 # グラフまわり
 # set style fill solid  # 塗りつぶし
-set style fill pattern 2 border  # モノクロ
+set style fill pattern 3 border  # モノクロ
 set style data histogram
 set boxwidth 0.5 relative
 
@@ -35,5 +35,5 @@ set key font ",18"    # 凡例のフォントの変更
 # set datafile separator " "
 set datafile separator "\t"  # 入力データの形式
 plot [:] [1:] \
-	"result.dat" using 0:($2+$3) with boxes title "Raw Logs" lt -1, \
-	"result.dat" using 0:($3):xtic(1) with boxes title "Summary Logs" lt -1 
+	"result.dat" using 0:($2+$3) with boxes title "Summary Logs" lt -1, \
+	"result.dat" using 0:($3):xtic(1) with boxes title "Raw Logs" lt -1 

@@ -14,7 +14,7 @@ set xtics font ",24" offset 0,0  # 目盛りのフォントの変更
 set ytics font ",24" offset 0,0  # 目盛りのフォントの変更
 
 # 軸ラベル
-set xlabel 'Applied Method' offset 0,-1
+# set xlabel 'Applied Method' offset 0,-1
 set ylabel 'Log File Size [Byte]' offset -4,0
 set xlabel font ",26" # xlabelのフォントの変更
 set ylabel font ",26" # ylabelのフォントの変更
