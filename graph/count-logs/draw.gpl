@@ -32,6 +32,14 @@ set boxwidth 0.5 relative
 set key outside center top horizontal reverse Left
 set key font ",18"    # 凡例のフォントの変更
 
+# 矢印
+set style arrow 999 size character 2,20 filled linewidth 2
+set arrow 1 from 1.4,56488 to 1.25,16488 arrowstyle 999
+
+# テキスト
+set label font ",18" # labelのフォントの変更
+set label 1 at 1.4,56488 "Summary\nLogs"
+
 # set datafile separator " "
 set datafile separator "\t"  # 入力データの形式
 plot [:] [1:] \
