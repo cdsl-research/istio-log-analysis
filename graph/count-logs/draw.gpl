@@ -34,14 +34,14 @@ set key font ",18"    # 凡例のフォントの変更
 
 # 矢印
 set style arrow 999 size character 2,20 filled linewidth 2
-set arrow 1 from 1.4,56488 to 1.25,16488 arrowstyle 999
+set arrow 1 from 1.51,56488 to 1.25,16488 arrowstyle 999
 
 # テキスト
-set label font ",18" # labelのフォントの変更
-set label 1 at 1.4,56488 "Summary\nLogs"
+set label font ",17" # labelのフォントの変更
+set label 1 at 1.51,56488 "Selected\nLog\nMessages"
 
 # set datafile separator " "
 set datafile separator "\t"  # 入力データの形式
 plot [:] [1:] \
-	"result.dat" using 0:($2+$3) with boxes title "Summary Logs" lt -1, \
-	"result.dat" using 0:($3):xtic(1) with boxes title "Raw Logs" lt -1 
+	"result.dat" using 0:($2+$3) with boxes title "Selected Log Messages" lt -1, \
+	"result.dat" using 0:($3):xtic(1) with boxes title "Original Log Messages" lt -1 
