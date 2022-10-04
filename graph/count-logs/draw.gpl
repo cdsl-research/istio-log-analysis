@@ -1,7 +1,7 @@
 # 出力形式
 set terminal pdf
 set output '5-result-reduction-count.pdf'
-set size ratio 0.6  # 出力サイズ
+set size ratio 0.7  # 出力サイズ
 
 # 目盛り
 set logscale y # 対数目盛り
@@ -38,10 +38,10 @@ set arrow 1 from 1.51,56488 to 1.25,16488 arrowstyle 999
 
 # テキスト
 set label font ",17" # labelのフォントの変更
-set label 1 at 1.51,56488 "Selected\nLog\nMessages"
+set label 1 at 1.51,56488 "Summarized\nLog\nMessages"
 
 # set datafile separator " "
 set datafile separator "\t"  # 入力データの形式
 plot [:] [1:] \
-	"result.dat" using 0:($2+$3) with boxes title "Selected Log Messages" lt -1, \
+	"result.dat" using 0:($2+$3) with boxes title "Summarized Log Messages" lt -1, \
 	"result.dat" using 0:($3):xtic(1) with boxes title "Original Log Messages" lt -1 
