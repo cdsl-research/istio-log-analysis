@@ -1,0 +1,7 @@
+in:
+  type: file
+  path_prefix: .
+  parser:
+    type: json
+out:
+  type: stdout
