@@ -1,12 +1,8 @@
 # Note
 
-## EMbulk
+## Fluentd
 
 ```
-# dry run
-embulk preview config.yml
-
-
-# plugin install
-embulk gem install embulk-output-elasticsearch
+sudo -u td-agent td-agent --config td-agent.conf
 ```
+
