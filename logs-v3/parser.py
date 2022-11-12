@@ -11,8 +11,14 @@ match_pattern = (
     r" (?P<Path>[^ ]+)"  # '/author'
     r' (?P<Protocol>[^ ]+)"'  # 'HTTP/1.1'
     r" (?P<Status>\d{,3})"  # '200'
-    r' (?P<_Details>[^ ]+ [^ ]+ [^ ]+ "-")'  # '- via_upstream - "-"'
-    r" (?P<_Sizes>[-\d]+ [-\d]+ [-\d]+ [-\d]+)"  # '0 11462 7 7'
+    r' (?P<ResponseFlags>[^ ]+)'  # '-'
+    r' (?P<ResponseCodeDetails>[^ ]+)'  # 'via_upstream'
+    r' (?P<ConnectionTerminationDetails>[^ ]+)'  # '-'
+    r' "(?P<UpstreamTransportFailureReason>[^"]+)"'  # '"-"'
+    r" (?P<BytesReceived>[-\d]+)"  # '0 11462 7 7'
+    r" (?P<BytesSent>[-\d]+)"  # '0 11462 7 7'
+    r" (?P<Duration>[-\d]+)"  # '0 11462 7 7'
+    r" (?P<RespXEnvoyUpstreamServiceTime>[-\d]+)"  # '0 11462 7 7'
     r' "(?P<XForwardFor>[\.,\-\w]+)"'  # "192.168.200.1,10.42.0.0"
     r' "(?P<UserAgent>[^"]+)"'  # "Python/3.9 aiohttp/3.8.1"
     r' "(?P<ReqId>[\-\w]+)"'  # '"ef217580-7229-9d84-b9b2-8d7bd3dfcca4"'
@@ -45,7 +51,7 @@ def test():
     # raw_txt = """[2022-05-25T06:38:13.956Z] "GET / HTTP/1.1" 200 - via_upstream - "-" 0 35430 6 6 "-" "Python/3.9 aiohttp/3.8.1" "e4c5583b-565c-9026-8e5d-974bdf8ab467" "service2.prod:4000" "10.42.2.204:4000" inbound|4000|| 127.0.0.6:56089 10.42.2.204:4000 10.42.3.252:54568 - default "GET /" service2(200)|service3(200)|"""
     print(raw_txt)
 
-    result = parser(raw_txt)
+    result = message_parser(raw_txt)
     print(json.dumps(result, indent=2))
 
 
@@ -66,4 +72,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    test()
+    #main()
